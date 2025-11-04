@@ -17,11 +17,14 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/chai": "^5.2.3",
     "@types/mocha": "^8.2.3",
     "@types/node": "^22.10.6",
     "@types/react": "^18.2.5",
     "@types/react-dom": "^18.2.4",
     "@types/sinon": "^17.0.4",
+    "chai": "^6.2.0",
+    "fs-fixture": "^2.10.1",
     "mock-fs": "^5.5.0",
     "sinon": "^21.0.0",
     "typescript": "^5.4.5"
@@ -31,7 +34,6 @@
       "client": "client/main.tsx",
       "server": "server/main.ts"
     },
-    "testModule": "tests/main.ts",
     "modern": true
   }
 }
