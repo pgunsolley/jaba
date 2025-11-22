@@ -1,1 +1,0 @@
-// TODO: Define thumbnail-specific matchers
