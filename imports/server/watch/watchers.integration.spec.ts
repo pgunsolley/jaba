@@ -8,29 +8,60 @@ https://docs.fedoraproject.org/en-US/defensive-coding/tasks/Tasks-Temporary_File
 import { createFixture, FsFixture } from 'fs-fixture';
 import { SinonSpy, spy, assert } from 'sinon';
 
-import { sleep } from '../utils/sleep';
-import { watchDir } from './watch';
+import { sleep } from '../../utils/sleep';
+import { watch, watchDir } from './watchers';
 
 describe('imports/server/watch.ts', function () {
+    let fixture: FsFixture;
+    let path: string;
+    let onAddListener: SinonSpy;
+    let onReadyListener: SinonSpy;
+    let onUnlinkListener: SinonSpy;
+
+    beforeEach(async function () {
+        fixture = await createFixture();
+        path = fixture.path;
+        onAddListener = spy();
+        onReadyListener = spy();
+        onUnlinkListener = spy();
+    });
+
+    afterEach(async function () {
+        await fixture.rm();
+    });
+
+    // Extends functionality from watch(), adding a watcher for subdirectories to be ignored
     describe('watchDir()', function () {
         this.timeout(8000);
 
-        let fixture: FsFixture;
-        let onAddListener: SinonSpy;
-        let onReadyListener: SinonSpy;
-        let onUnlinkListener: SinonSpy;
-
-        beforeEach(async function () {
-            fixture = await createFixture();
-            onAddListener = spy();
-            onReadyListener = spy();
-            onUnlinkListener = spy();
-            const path = fixture.path;
+        beforeEach(function () {
             watchDir({ path, onAddListener, onReadyListener, onUnlinkListener });
         });
 
-        afterEach(async function () {
-            await fixture.rm();
+        it('should not call onAddListener() when a directory is added', async function () {
+            await fixture.mkdir('some-directory');
+            await sleep(4000);
+            assert.calledOnce(onReadyListener);
+            assert.callCount(onAddListener, 0);
+            assert.callCount(onUnlinkListener, 0);
+        });
+
+        it('should call onAddListener() once when a file is added', async function () {
+            await fixture.writeFile('foo.txt', 'foo');
+            await sleep(4000);
+            assert.calledOnce(onReadyListener);
+            assert.calledOnce(onAddListener);
+            assert.callCount(onUnlinkListener, 0);
+        });
+    });
+
+    // Shares functionality with watchDir(), but allows caller to pass Matcher.
+    // Shared functionality is tested here.
+    describe('watch()', function () {
+        this.timeout(8000);
+
+        beforeEach(async function () {
+            watch({ path, onAddListener, onReadyListener, onUnlinkListener });
         });
 
         it('should call onReadListener() once on initialization', async function () {
@@ -61,7 +92,7 @@ describe('imports/server/watch.ts', function () {
             await fixture.writeFile('foo.txt', 'foo');
             await fixture.writeFile('bar.txt', 'bar');
             await fixture.rm('bar.txt');
-            await sleep(1000);
+            await sleep(3000);
             assert.calledOnce(onReadyListener);
             assert.calledTwice(onAddListener);
             assert.calledOnce(onUnlinkListener);

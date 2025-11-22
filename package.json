@@ -12,9 +12,11 @@
     "@swc/helpers": "^0.5.17",
     "chokidar": "^4.0.3",
     "dotenv": "^17.2.3",
+    "env-var": "^7.5.0",
     "meteor-node-stubs": "^1.2.12",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@types/chai": "^5.2.3",
