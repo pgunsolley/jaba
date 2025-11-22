@@ -1,6 +1,6 @@
 import chokidar, { FSWatcher, Matcher } from 'chokidar';
 import { Stats } from 'node:fs';
-import { ignoreSubdirectories } from './matchers';
+import { isSubdirectory } from './matchers';
 
 export type OnReadyListener = () => void;
 export type OnUnlinkListener = (filePath: string) => void;
@@ -55,7 +55,7 @@ export const watchDir = ({
 }: WatchDirProps): FSWatcher => {
     const watcher = chokidar.watch(path, {
         persistent: true,
-        ignored: ignoreSubdirectories(path),
+        ignored: isSubdirectory(path),
     });
     
     return registerListeners(watcher, { onReadyListener, onUnlinkListener, onAddListener, onErrorListener });

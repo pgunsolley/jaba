@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { stub } from 'sinon';
 import { Stats } from 'fs';
 
-import { ignoreSubdirectories } from "./matchers";
+import { isSubdirectory } from "./matchers";
 
 describe('imports/server/watch/matchers.ts', function () {
     describe('ignoreSubdirectories()', function () {
@@ -38,7 +38,7 @@ describe('imports/server/watch/matchers.ts', function () {
         });
 
         it('should return true when directory', function () {
-            const matcher = ignoreSubdirectories('foo/bar/baz');
+            const matcher = isSubdirectory('foo/bar/baz');
             const stats = createStatsStub({
                 isDirectory: stub().returns(true),
             });
@@ -47,7 +47,7 @@ describe('imports/server/watch/matchers.ts', function () {
         });
 
         it('should return false when not directory', function () {
-            const matcher = ignoreSubdirectories('foo/bar/baz');
+            const matcher = isSubdirectory('foo/bar/baz');
             const stats = createStatsStub({
                 isDirectory: stub().returns(false),
             });
@@ -56,7 +56,7 @@ describe('imports/server/watch/matchers.ts', function () {
         });
 
         it('should return false when dirname does not match', function () {
-            const matcher = ignoreSubdirectories('foo/bar/baz');
+            const matcher = isSubdirectory('foo/bar/baz');
             const stats = createStatsStub({
                 isDirectory: stub().returns(false),
             });
