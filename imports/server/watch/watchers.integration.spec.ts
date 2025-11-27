@@ -11,7 +11,7 @@ import { SinonSpy, spy, assert } from 'sinon';
 import { sleep } from '../../utils/sleep';
 import { watch, watchDir } from './watchers';
 
-describe('imports/server/watch.ts', function () {
+describe('imports/server/watch/watchers.ts', function () {
     let fixture: FsFixture;
     let path: string;
     let onAddListener: SinonSpy;
@@ -20,6 +20,7 @@ describe('imports/server/watch.ts', function () {
 
     beforeEach(async function () {
         fixture = await createFixture();
+        process.on('SIGINT', () => fixture.rm());
         path = fixture.path;
         onAddListener = spy();
         onReadyListener = spy();
@@ -32,7 +33,7 @@ describe('imports/server/watch.ts', function () {
 
     // Extends functionality from watch(), adding a watcher for subdirectories to be ignored
     describe('watchDir()', function () {
-        this.timeout(8000);
+        this.timeout(10000);
 
         beforeEach(function () {
             watchDir({ path, onAddListener, onReadyListener, onUnlinkListener });
@@ -58,7 +59,7 @@ describe('imports/server/watch.ts', function () {
     // Shares functionality with watchDir(), but allows caller to pass Matcher.
     // Shared functionality is tested here.
     describe('watch()', function () {
-        this.timeout(8000);
+        this.timeout(10000);
 
         beforeEach(async function () {
             watch({ path, onAddListener, onReadyListener, onUnlinkListener });

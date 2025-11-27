@@ -11,6 +11,7 @@ describe('imports/server/fs.ts', function () {
 
     beforeEach(async function () {
         fixture = await createFixture();
+        process.on('SIGINT', () => { console.log('SIGINT INTERCEPTED'); fixture.rm(); });
         path = fixture.path;
     });
 
