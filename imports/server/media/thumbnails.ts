@@ -5,7 +5,7 @@ import sharp from 'sharp';
 import { fromPath as pdf2picFromPath } from 'pdf2pic';
 
 import config from '../config';
-import { mkdirIfNotExists } from '../fs';
+import { mkdirIfNotExists } from '../util/fs';
 
 const thumbnailsPath = join(config.appFilesPath, 'thumbnails');
 export const thumbnailWidth = 300;
